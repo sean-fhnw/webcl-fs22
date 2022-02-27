@@ -46,3 +46,9 @@ input[type=text]:focus {
 input.invalid {
     color: red;
 }
+
+.spongebob {
+    width: 50%;
+    margin: auto;
+    display: block;
+}

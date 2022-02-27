@@ -3,10 +3,15 @@
 // requires ./fortuneService.js
 // requires ../dataflow/dataflow.js
 
+const mockify = text => {
+    return text.split('').map(char => char[Math.random() > 0.5 ? 'toUpperCase' : 'toLowerCase']()).join('');
+}
+
 const TodoController = () => {
 
     const Todo = () => {                                // facade
         const textAttr = Observable("text");            // we current don't expose it as we don't use it elsewhere
+        const mockText = Computed((text) => mockify(text), textAttr);
         const doneAttr = Observable(false);
         const valid = Computed((text, minLength, minLengthMode) => {
             const length = minLengthMode === 'words' ?
@@ -19,8 +24,8 @@ const TodoController = () => {
             setDone:       doneAttr.setValue,
             onDoneChanged: doneAttr.onChange,
             setText:       textAttr.setValue,
-            getText:       textAttr.getValue,
-            onTextChanged: textAttr.onChange,
+            getText:       mockText.getValue,
+            onTextChanged: mockText.onChange,
             getValid:      valid.getValue,
             onValidChanged:valid.onChange,
         }
