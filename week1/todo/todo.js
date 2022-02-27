@@ -3,8 +3,19 @@
 // requires ./fortuneService.js
 // requires ../dataflow/dataflow.js
 
+const pseudoRandom = seed => {
+    const a = 75;
+    const c = 74;
+    const m = 2**16 + 1;
+    return () => {
+        seed = (a * seed + c) % m;
+        return seed;
+    }
+};
+
 const mockify = text => {
-    return text.split('').map(char => char[Math.random() > 0.5 ? 'toUpperCase' : 'toLowerCase']()).join('');
+    const rng = pseudoRandom(42);
+    return text.split('').map((char, i) => char[rng() % 2 ? 'toUpperCase' : 'toLowerCase']()).join('');
 }
 
 const TodoController = () => {
