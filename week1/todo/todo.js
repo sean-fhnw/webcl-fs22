@@ -1,4 +1,5 @@
 // requires ../observable/observable.js
+// requires ../observable/computed.js
 // requires ./fortuneService.js
 // requires ../dataflow/dataflow.js
 
@@ -7,6 +8,7 @@ const TodoController = () => {
     const Todo = () => {                                // facade
         const textAttr = Observable("text");            // we current don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
+        const valid = Computed((text) => text.length > 5, textAttr);
         return {
             getDone:       doneAttr.getValue,
             setDone:       doneAttr.setValue,
@@ -14,6 +16,8 @@ const TodoController = () => {
             setText:       textAttr.setValue,
             getText:       textAttr.getValue,
             onTextChanged: textAttr.onChange,
+            getValid:      valid.getValue,
+            onValidChanged:valid.onChange,
         }
     };
 
@@ -74,6 +78,7 @@ const TodoItemsView = (todoController, rootElement) => {
 
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
+        inputElement.oninput = _ => todo.setText(inputElement.value);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
@@ -84,6 +89,7 @@ const TodoItemsView = (todoController, rootElement) => {
         } );
 
         todo.onTextChanged(() => inputElement.value = todo.getText());
+        todo.onValidChanged(() => inputElement.classList[todo.getValid() ? 'remove' : 'add']('invalid'));
 
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);
