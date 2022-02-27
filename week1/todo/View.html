@@ -18,6 +18,13 @@
 
         <div>Tasks: <span id="numberOfTasks">0</span></div>
         <div>Open:  <span id="openTasks"    >0</span></div>
+
+        <div>
+            Minimum valid todo length: <span id="minLen">1 letter</span>
+        </div>
+        <input type="range" value="1" min="1" max="20" id="minLenInput" oninput="todoController.setMinLength(parseInt(this.value))">
+        <label><input type="radio" name="minLenMode" value="letters" oninput="todoController.setMinLengthMode(this.value)" checked> letters</label>
+        <label><input type="radio" name="minLenMode" value="words" oninput="todoController.setMinLengthMode(this.value)"> words</label>
     </div>
 </main>
 
@@ -33,6 +40,7 @@
     TodoItemsView(todoController, document.getElementById('todoContainer'));
     TodoTotalView(todoController, document.getElementById('numberOfTasks'));
     TodoOpenView (todoController, document.getElementById('openTasks'));
+    MinTodoLengthView(todoController, document.getElementById('minLen'));
 
     todoController.addTodo();
 

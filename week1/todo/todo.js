@@ -8,7 +8,12 @@ const TodoController = () => {
     const Todo = () => {                                // facade
         const textAttr = Observable("text");            // we current don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
-        const valid = Computed((text) => text.length > 5, textAttr);
+        const valid = Computed((text, minLength, minLengthMode) => {
+            const length = minLengthMode === 'words' ?
+                text.split(/\s+/).length :
+                text.length;
+            return length >= minLength;
+        }, textAttr, minLength, minLengthMode);
         return {
             getDone:       doneAttr.getValue,
             setDone:       doneAttr.setValue,
@@ -23,6 +28,8 @@ const TodoController = () => {
 
     const todoModel = ObservableList([]); // observable array of Todos, this state is private
     const scheduler = Scheduler();
+    const minLength = Observable(1);
+    const minLengthMode = Observable('letters');
 
     const addTodo = () => {
         const newTodo = Todo();
@@ -55,6 +62,12 @@ const TodoController = () => {
         onTodoAdd:          todoModel.onAdd,
         onTodoRemove:       todoModel.onDel,
         removeTodoRemoveListener: todoModel.removeDeleteListener, // only for the test case, not used below
+        getMinLengthMode:       minLengthMode.getValue,
+        setMinLengthMode:       minLengthMode.setValue,
+        onMinLengthModeChange:  minLengthMode.onChange,
+        getMinLength:           minLength.getValue,
+        setMinLength:           minLength.setValue,
+        onMinLengthChange:      minLength.onChange,
     }
 };
 
@@ -126,6 +139,19 @@ const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
         todo.onDoneChanged(render);
     });
     todoController.onTodoRemove(render);
+};
+
+const MinTodoLengthView = (todoController, el) => {
+
+    const render = () =>
+        el.innerText = todoController.getMinLength() === 1 ?
+            `1 ${todoController.getMinLengthMode().slice(0, -1)}` :
+            `${todoController.getMinLength()} ${todoController.getMinLengthMode()}`;
+
+    // binding
+
+    todoController.onMinLengthChange(render);
+    todoController.onMinLengthModeChange(render);
 };
 
 
