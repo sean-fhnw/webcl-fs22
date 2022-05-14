@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        :root {
+            margin:     0;
+            padding:    0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", "sans-serif";
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            min-height: 100vh;
+            align-items: center;
+        }
+        div {
+            padding: 5em;
+        }
+
+        /* provided style (hard to change)*/
+
+        div {
+            background: yellow;
+        }
+        .cool {
+            background: orange;
+        }
+        #one#one {
+            background: red;
+        }
+        #one {
+            background: green;
+        }
+
+        /* custom style */
+
+
+    </style>
+</head>
+<body>
+
+
+<main>
+    <div>
+        Element only</div>
+    <div class="main__div main__cool" >
+        Cool Class</div>
+    <div id="one">
+        One Id</div>
+    <div style="background: aqua">
+        Inline style</div>
+</main>
+
+
+
+</body>
+
+</html>
